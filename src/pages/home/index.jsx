@@ -21,7 +21,7 @@ const Home = () => {
     <div className='home'>
       <Row>
         <Col span={12}>
-          <Card title='表单功能'>
+          <Card title='表单组件'>
             <Button type='primary' onClick={handleEdit}>
               编辑
             </Button>
