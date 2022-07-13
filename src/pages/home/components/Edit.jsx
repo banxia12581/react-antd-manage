@@ -61,7 +61,7 @@ const Edit = ({ ...props }) => {
       list: [
         {
           id: 1,
-          name: '堪品',
+          name: '老品',
         },
         {
           id: 2,
