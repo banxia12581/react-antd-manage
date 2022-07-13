@@ -8,7 +8,7 @@ import classnames from 'classnames';
 import { Form, Select, Input, DatePicker, Checkbox, InputNumber, Radio, Space } from 'antd';
 
 const BaseFormUI = ({ ...props }) => {
-  const { data = {}, callback, getFormRef } = props;
+  const { data = {}, callback, getFormRef, layout } = props;
   const formRef = useRef({});
   /**
    * 初始化list数据
@@ -34,12 +34,6 @@ const BaseFormUI = ({ ...props }) => {
     item.textArea = initListData(item.textArea, '输入');
   });
   let [list, setList] = useState(listInit);
-  let layout = props.layout
-    ? props.layout
-    : {
-        labelCol: 6,
-        wrapperCol: 18,
-      };
   let layoutInit = {
     labelCol: { span: layout.labelCol },
     wrapperCol: { span: layout.wrapperCol },
@@ -87,7 +81,7 @@ const BaseFormUI = ({ ...props }) => {
         ) : (
           <Form.Item label={item.label} className={classnames({ required: item.required })}>
             <Form.Item noStyle name={item.key} rules={item.rules} disabled={item.disabled}>
-              <InputNumber style={{ width: '50%' }} step={item.step} min={item.min} precision={item.precision} />
+              <InputNumber style={{ width: '50%' }} step={item.step} min={item.min} max={item.max} precision={item.precision} />
             </Form.Item>
             <span style={{ marginLeft: '10px' }}>{item.unit}</span>
           </Form.Item>
@@ -123,15 +117,14 @@ const BaseFormUI = ({ ...props }) => {
 
   /**
    * 多选操作
-   * @param {any} id 选择的id
-   * @param {any} item 选择的item
+   * @param {any} checkedValues 选择的数组
    * @param {number} index 选择的表单项的索引
    * @return {void} 无
    */
-  const checkboxChange = (id, item, index) => {
+  const checkboxChange = (checkedValues, index) => {
     let formListInit = _.cloneDeep(list);
     let formItem = formListInit[index];
-    formItem.option = item;
+    formItem.option = checkedValues;
     setList(formListInit);
   };
 
@@ -147,7 +140,7 @@ const BaseFormUI = ({ ...props }) => {
           item.children
         ) : (
           <Form.Item label={item.label} name={item.key} rules={item.rules} disabled={item.disabled}>
-            <Checkbox.Group onChange={(id, obj) => checkboxChange(id, obj, index)}>
+            <Checkbox.Group onChange={checkedValues => checkboxChange(checkedValues, index)}>
               {item.list.length !== 0
                 ? item.list.map(listItem => (
                     <Checkbox key={listItem.id} value={listItem.id}>
@@ -337,6 +330,10 @@ BaseFormUI.propTypes = {
 BaseFormUI.defaultProps = {
   data: {},
   list: [],
+  layout: {
+    labelCol: 6,
+    wrapperCol: 18,
+  },
 };
 
 export default BaseFormUI;
